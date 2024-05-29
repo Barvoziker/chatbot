@@ -1,14 +1,59 @@
 #chat-container {
   display: flex;
-  flex-direction: column;
   height: 90vh;
   width: 100vw;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
+}
+
+#bot-list-container {
+  width: 200px;
+  margin-right: 20px;
+}
+
+#bot-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.bot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #e1f5fe;
+  cursor: pointer;
+  text-align: center;
+}
+
+.bot-item:hover {
+  background-color: #b3e5fc;
+}
+
+.bot-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.bot-description {
+  font-size: 12px;
+  color: #555;
+  margin-top: 5px;
+}
+
+#chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 #message-list {

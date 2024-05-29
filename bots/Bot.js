@@ -1,9 +1,10 @@
 import { displayMessage } from '../components/ui.js';
 
 export class Bot {
-    constructor(name, actions) {
+    constructor(name, actions, image) {
         this.name = name;
         this.actions = actions;
+        this.image = image; // Ajout de la propriété image
     }
 
     processMessage(message) {
@@ -17,8 +18,6 @@ export class Bot {
             } else {
                 displayMessage(this.name, response);
             }
-        } else {
-            displayMessage(this.name, 'Command not recognized.');
         }
     }
 }

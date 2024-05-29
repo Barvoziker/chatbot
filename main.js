@@ -1,27 +1,30 @@
 import { Bot } from './bots/Bot.js';
-import { displayMessage, createChatInterface } from './components/ui.js';
-import { fetchRaceData } from './api/ergast.js';
+import { displayMessage, createChatInterface, createBotList } from './components/ui.js';
+import { fetchRaceData, fetchDriverStandings, fetchConstructorStandings, fetchLastRaceResults, fetchNextRaceSchedule } from './api/ergast.js';
 
 // Créer l'interface utilisateur
 createChatInterface();
 
 const bots = [
-    new Bot('Bot1', {
-        'hello': () => 'Hello from Bot1!',
-        'time': () => new Date().toLocaleTimeString(),
-        'race': fetchRaceData
-    }),
+    new Bot('Formula 1 - Bot', {
+        'bonjour': () => 'Bonjour je suis votre assistant Formula 1!',
+        'lastRaceWinner': fetchRaceData,
+        'driverStandings': fetchDriverStandings,
+        'constructorStandings': fetchConstructorStandings,
+        'lastRaceResults': fetchLastRaceResults,
+        'nextRaceSchedule': fetchNextRaceSchedule,
+    }, './images/F1.png'),
     new Bot('Bot2', {
         'hello': () => 'Hello from Bot2!',
         'date': () => new Date().toLocaleDateString(),
-        'race': fetchRaceData
-    }),
+    }, './images/Tarkov.png'),
     new Bot('Bot3', {
         'hello': () => 'Hello from Bot3!',
         'weather': () => 'Weather data not available in this demo',
-        'race': fetchRaceData
-    })
+    }, './images/placeholder.png')
 ];
+
+createBotList(bots); // Créer la liste des bots disponibles
 
 document.getElementById('send-button').addEventListener('click', sendMessage);
 document.getElementById('message-input').addEventListener('keypress', (e) => {
