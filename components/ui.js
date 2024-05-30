@@ -1,4 +1,4 @@
-export function createChatInterface() {
+export const createChatInterface = () => {
     const container = document.createElement('div');
     container.id = 'chat-container';
 
@@ -24,31 +24,26 @@ export function createChatInterface() {
     clearButton.id = 'clear-button';
     clearButton.textContent = 'Effacer les messages';
 
-    chatArea.appendChild(messageList);
-    chatArea.appendChild(input);
-    chatArea.appendChild(button);
-    chatArea.appendChild(clearButton);
-
-    container.appendChild(botListContainer);
-    container.appendChild(chatArea);
+    chatArea.append(messageList, input, button, clearButton);
+    container.append(botListContainer, chatArea);
     document.body.appendChild(container);
 
-    loadMessages(); // Charger les messages depuis le local storage
+    loadMessages();
 
-    clearButton.addEventListener('click', clearMessages); // Ajouter un événement pour le bouton clear
-}
+    clearButton.addEventListener('click', clearMessages);
+};
 
-export function displayMessage(sender, message) {
+export const displayMessage = (sender, message) => {
     const messageList = document.getElementById('message-list');
     const messageElement = document.createElement('div');
     messageElement.className = 'message';
     messageElement.innerHTML = `<strong>${sender} :</strong> ${message}`;
     messageList.appendChild(messageElement);
-    saveMessages(); // Sauvegarder les messages dans le local storage
-    autoScroll(); // Appeler la fonction de défilement automatique
-}
+    saveMessages();
+    autoScroll();
+};
 
-export function createBotList(bots) {
+export const createBotList = (bots) => {
     const botListContainer = document.getElementById('bot-list-container');
     const botList = document.createElement('ul');
     botList.id = 'bot-list';
@@ -69,41 +64,34 @@ export function createBotList(bots) {
         botDescription.textContent = 'Cliquez sur moi afin de connaitre mes commandes';
         botDescription.className = 'bot-description';
 
-        botItem.appendChild(botImage);
-        botItem.appendChild(botName);
-        botItem.appendChild(botDescription);
+        botItem.append(botImage, botName, botDescription);
         botItem.addEventListener('click', () => handleBotClick(bot));
         botList.appendChild(botItem);
     });
 
     botListContainer.appendChild(botList);
-}
+};
 
 function handleBotClick(bot) {
-    // Exécuter la commande "hello" ou "bonjour"
     const helloResponse = bot.actions['hello'] ? bot.actions['hello']() : bot.actions['bonjour']();
     displayMessage(bot.name, helloResponse);
 
-    // Afficher la liste des commandes disponibles
-    const commands = Object.keys(bot.actions).join(', ');
-    displayMessage(bot.name, `Commandes disponibles : ${commands}`);
+    const commands = Object.keys(bot.actions).map(command => `<li>${command}</li>`).join('');
+    displayMessage(bot.name, `Commandes disponibles : <ul>${commands}</ul>`);
 }
 
-function autoScroll() {
+const autoScroll = () => {
     const messageList = document.getElementById('message-list');
     messageList.scrollTop = messageList.scrollHeight;
-}
+};
 
-function saveMessages() {
+const saveMessages = () => {
     const messageList = document.getElementById('message-list');
-    const messages = [];
-    messageList.querySelectorAll('.message').forEach(messageElement => {
-        messages.push(messageElement.innerHTML);
-    });
+    const messages = Array.from(messageList.querySelectorAll('.message')).map(messageElement => messageElement.innerHTML);
     localStorage.setItem('chatMessages', JSON.stringify(messages));
-}
+};
 
-function loadMessages() {
+const loadMessages = () => {
     const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
     const messageList = document.getElementById('message-list');
     messages.forEach(messageHTML => {
@@ -113,10 +101,10 @@ function loadMessages() {
         messageList.appendChild(messageElement);
     });
     autoScroll();
-}
+};
 
-function clearMessages() {
+const clearMessages = () => {
     localStorage.removeItem('chatMessages');
     const messageList = document.getElementById('message-list');
     messageList.innerHTML = '';
-}
+};

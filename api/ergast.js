@@ -1,64 +1,77 @@
-export async function fetchRaceData(query) {
+const fetchJSON = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
+};
+
+const getRaceData = (data) => {
+    const race = data.MRData.RaceTable.Races[0];
+    const { raceName } = race;
+    const { familyName, givenName } = race.Results[0].Driver;
+    const winner = `${givenName} ${familyName}`;
+    return { raceName, winner };
+};
+
+export const fetchRaceData = async (query) => {
     const season = query || new Date().getFullYear();
     const url = `https://ergast.com/api/f1/${season}/last/results.json`;
-
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        const race = data.MRData.RaceTable.Races[0];
-        const raceName = race.raceName;
-        const familyName = race.Results[0].Driver.familyName;
-        const givenName = race.Results[0].Driver.givenName;
-        const winner = `${givenName} ${familyName}`;
-
+        const data = await fetchJSON(url);
+        const { raceName, winner } = getRaceData(data);
         return `La dernière course de la saison ${season} était ${raceName} et le gagnant était ${winner}`;
     } catch (error) {
         return 'Error fetching race data';
     }
-}
+};
 
-export async function fetchDriverStandings() {
-    const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json');
-    const data = await response.json();
+const createTable = (headers, rows) => {
+    const tableHeaders = headers.map(header => `<th>${header}</th>`).join('');
+    const tableRows = rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
+    return `<table><tr>${tableHeaders}</tr>${tableRows}</tr></table>`;
+};
+
+const getDriverStandingsRows = (standings) => standings.map(driver => [
+    driver.position,
+    `${driver.Driver.givenName} ${driver.Driver.familyName}`,
+    driver.points
+]);
+
+export const fetchDriverStandings = async () => {
+    const url = 'https://ergast.com/api/f1/current/driverStandings.json';
+    const data = await fetchJSON(url);
     const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-    let table = '<table><tr><th>Position</th><th>Pilote</th><th>Points</th></tr>';
-    standings.forEach(driver => {
-        table += `<tr><td>${driver.position}</td><td>${driver.Driver.givenName} ${driver.Driver.familyName}</td><td>${driver.points}</td></tr>`;
-    });
-    table += '</table>';
-    return table;
-}
+    return createTable(['Position', 'Pilote', 'Points'], getDriverStandingsRows(standings));
+};
 
-export async function fetchConstructorStandings() {
-    const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json');
-    const data = await response.json();
+const getConstructorStandingsRows = (standings) => standings.map(constructor => [
+    constructor.position,
+    constructor.Constructor.name,
+    constructor.points
+]);
+
+export const fetchConstructorStandings = async () => {
+    const url = 'https://ergast.com/api/f1/current/constructorStandings.json';
+    const data = await fetchJSON(url);
     const standings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
-    let table = '<table><tr><th>Position</th><th>Constructeur</th><th>Points</th></tr>';
-    standings.forEach(constructor => {
-        table += `<tr><td>${constructor.position}</td><td>${constructor.Constructor.name}</td><td>${constructor.points}</td></tr>`;
-    });
-    table += '</table>';
-    return table;
-}
+    return createTable(['Position', 'Constructeur', 'Points'], getConstructorStandingsRows(standings));
+};
 
-export async function fetchLastRaceResults() {
-    const response = await fetch('https://ergast.com/api/f1/current/last/results.json');
-    const data = await response.json();
+const getLastRaceResultsRows = (results) => results.map(result => [
+    result.position,
+    `${result.Driver.givenName} ${result.Driver.familyName}`,
+    result.Constructor.name
+]);
+
+export const fetchLastRaceResults = async () => {
+    const url = 'https://ergast.com/api/f1/current/last/results.json';
+    const data = await fetchJSON(url);
     const results = data.MRData.RaceTable.Races[0].Results;
-    let table = '<table><tr><th>Position</th><th>Pilote</th><th>Constructeur</th></tr>';
-    results.forEach(result => {
-        table += `<tr><td>${result.position}</td><td>${result.Driver.givenName} ${result.Driver.familyName}</td><td>${result.Constructor.name}</td></tr>`;
-    });
-    table += '</table>';
-    return table;
-}
+    return createTable(['Position', 'Pilote', 'Constructeur'], getLastRaceResultsRows(results));
+};
 
-export async function fetchNextRaceSchedule() {
-    const response = await fetch('https://ergast.com/api/f1/current/next.json');
-    const data = await response.json();
+export const fetchNextRaceSchedule = async () => {
+    const url = 'https://ergast.com/api/f1/current/next.json';
+    const data = await fetchJSON(url);
     const race = data.MRData.RaceTable.Races[0];
     return `Prochaine course : ${race.raceName} le ${race.date} au ${race.Circuit.circuitName}`;
-}
+};

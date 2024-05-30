@@ -4,7 +4,7 @@ export class Bot {
     constructor(name, actions, image) {
         this.name = name;
         this.actions = actions;
-        this.image = image; // Ajout de la propriété image
+        this.image = image;
     }
 
     processMessage(message) {
