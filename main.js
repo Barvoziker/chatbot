@@ -7,7 +7,7 @@ import { fetchPokemonInfo, fetchPokemonTypes, fetchPokemonAbility } from './api/
 const initializeBots = () => {
     return [
         new Bot('Formula 1 - Bot', {
-            'bonjour': () => 'Bonjour je suis votre assistant Formula 1!',
+            'hello': () => 'Hello from Formula 1 Bot!',
             'lastRaceWinner': fetchRaceData,
             'driverStandings': fetchDriverStandings,
             'constructorStandings': fetchConstructorStandings,
