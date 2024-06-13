@@ -1,7 +1,8 @@
 import { Bot } from './bots/Bot.js';
-import { displayMessage, createChatInterface, createBotList } from './components/ui.js';
+import { displayMessage, createChatInterface, createBotList, displayPokemonCard } from './components/ui.js';
 import { fetchRaceData, fetchDriverStandings, fetchConstructorStandings, fetchLastRaceResults, fetchNextRaceSchedule } from './api/ergast.js';
 import { fetchTarkovItemByName, fetchTarkovBosses, fetchTarkovMaps, fetchTarkovTraders } from './api/tarkov.js';
+import { fetchPokemonInfo, fetchPokemonTypes, fetchPokemonAbility } from './api/pokeapi.js';
 
 const initializeBots = () => {
     return [
@@ -25,10 +26,28 @@ const initializeBots = () => {
             'maps': fetchTarkovMaps,
             'traders': fetchTarkovTraders,
         }, './images/Tarkov.png'),
-        new Bot('Bot3', {
-            'hello': () => 'Hello from Bot3!',
-            'weather': () => 'Weather data not available in this demo',
-        }, './images/placeholder.png')
+        new Bot('Pokémon - Bot', {
+            'hello': () => 'Hello from Pokémon Bot!',
+            'pokemon': async (pokemonName) => {
+                if (!pokemonName) {
+                    return 'Veuillez entrer le nom d\'un Pokémon. Exemple : pokemon pikachu';
+                }
+                const pokemonInfo = await fetchPokemonInfo(pokemonName);
+                if (pokemonInfo) {
+                    displayPokemonCard(pokemonInfo);
+                    return '';
+                } else {
+                    return `Erreur lors de la récupération des informations pour "${pokemonName}".`;
+                }
+            },
+            'types': fetchPokemonTypes,
+            'ability': async (abilityName) => {
+                if (!abilityName) {
+                    return 'Veuillez entrer le nom d\'une capacité. Exemple : ability overgrow';
+                }
+                return await fetchPokemonAbility(abilityName);
+            }
+        }, './images/pokemon.png')
     ];
 };
 

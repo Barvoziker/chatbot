@@ -43,6 +43,22 @@ export const displayMessage = (sender, message) => {
     autoScroll();
 };
 
+export const displayPokemonCard = (pokemon) => {
+    const messageList = document.getElementById('message-list');
+    const cardElement = document.createElement('div');
+    cardElement.className = 'pokemon-card';
+    cardElement.innerHTML = `
+        <img src="${pokemon.image}" alt="${pokemon.name}" class="pokemon-image">
+        <h3>${pokemon.name}</h3>
+        <p>Type : ${pokemon.types}</p>
+        <p>Taille : ${pokemon.height}</p>
+        <p>Poids : ${pokemon.weight}</p>
+    `;
+    messageList.appendChild(cardElement);
+    saveMessages();
+    autoScroll();
+};
+
 export const createBotList = (bots) => {
     const botListContainer = document.getElementById('bot-list-container');
     const botList = document.createElement('ul');
@@ -87,7 +103,7 @@ const autoScroll = () => {
 
 const saveMessages = () => {
     const messageList = document.getElementById('message-list');
-    const messages = Array.from(messageList.querySelectorAll('.message')).map(messageElement => messageElement.innerHTML);
+    const messages = Array.from(messageList.querySelectorAll('.message, .pokemon-card')).map(messageElement => messageElement.outerHTML);
     localStorage.setItem('chatMessages', JSON.stringify(messages));
 };
 

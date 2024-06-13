@@ -105,7 +105,7 @@
   background-color: #01579b;
 }
 
-.item-card, .boss-card, .trader-card {
+.item-card, .boss-card, .trader-card, .map-card {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
@@ -136,10 +136,36 @@
   border: 2px solid white;
 }
 
-.item-details, .boss-details, .trader-details h3 {
+.item-details, .boss-details, .trader-details, .map-details h3 {
   margin: 0 0 8px 0;
 }
 
-.item-details p, .boss-details p, .trader-details p {
+.item-details p, .boss-details p, .trader-details, .map-details p {
+  margin: 4px 0;
+}
+
+.pokemon-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-image {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.pokemon-card h3 {
+  margin: 0 0 8px 0;
+}
+
+.pokemon-card p {
   margin: 4px 0;
 }
